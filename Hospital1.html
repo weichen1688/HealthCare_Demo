@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hospital1</title>
+    <style>
+        pre {
+            background: #E0F2F7;
+        }
+		.fancytable{border:1px solid #cccccc;border-collapse:collapse;}
+		.fancytable td{border:1px solid #cccccc; color:#555555;text-align:center;line-height:28px;}
+		.headerrow{ background-color:#FE9A2E;;}
+		.headerrow td{ color:#0066cc; text-align:center;}
+		.dataroweven{ background-color:#FE9A2E;}
+		.dataroweven td{ background-color:#FE9A2E;}
+		::selection {
+		        background: #FE9A2E; /* Safari */
+		        }
+		::-moz-selection {
+		        background: #FE9A2E; /* Firefox */
+		}
+    </style>
+</head>
+
+<body translate="no">
+
+    <h4>醫院(一）調閱病人病歷</h4>
+
+<font size="3">醫院代碼：</font><input style="font-size:13px" type="text" name="hospital_id" id="hospital_id"  value="H1" readonly>
+<table style="height: 9px;" width="536"> 
+<tbody>
+<tr>
+<td><input id="data1_id" type="text" placeholder="輸入病人證號" />
+<button id="getSContract">取得病人授權設定</button></td>
+</tr>
+</tbody>
+
+<table class="fancytable"  width="435" >
+<tbody>
+<tr class="headerrow">
+<td style="text-align: center;"><span><font size="2">查詢項目</font></span></td>
+<td style="text-align: center;"><span><font size="2">查詢目的</font></span></td>
+<td style="text-align: center;"><span><font size="2">查詢來源</font></span></td>
+<td>&nbsp;</td>
+</tr>
+<tr>
+<td align="center" valign="center">
+<select NAME="item_id" id="item_id" >
+	<option value="ITEM1">影像報告</option>
+	<option value="ITEM2">門診用藥</option>
+	<option value="ITEM3">血液檢驗</option>
+	<option value="ITEM4">出院病摘</option>
+	<option value="ITEM5">手術記錄</option>
+</select>
+</td>
+<td align="center" valign="center">
+<select id="purposes" multiple="multiple" size=6> 
+	<option value="P1">&nbsp;&nbsp;醫療&nbsp;&nbsp;</option> 
+	<option value="P2">&nbsp;&nbsp;照護&nbsp;&nbsp;</option> 
+	<option value="P3">&nbsp;&nbsp;教學&nbsp;&nbsp;</option> 
+	<option value="P4">&nbsp;&nbsp;研究&nbsp;&nbsp;</option> 
+	<option value="P5">&nbsp;&nbsp;商用&nbsp;&nbsp;</option> 
+</select>
+</td>
+<td align="center" valign="center">
+<select NAME="other_hospital_id" id="other_hospital_id">
+	<option value="h2">醫院(二)</option>
+	<option value="h3">醫院(三)</option>
+	<option value="h4">醫院(四)</option>
+</select>
+</td>
+<td align="center" valign="center">
+<button id="get_item1">開始調閱</button>
+</td>
+</tr>
+</tbody>
+</table>
+
+
+    <h5>調閱結果 : </h5>
+    <img id="demo_pic" src="" width="500px" height="500px">
+
+    <script src='web3.min.js'></script>
+    <script src='jquery.min.js'></script>
+
+    <script>
+        function log(input) {
+            if (typeof input === 'object') {
+                input = JSON.stringify(input, null, 2);
+            }
+            $('#log').html(input + '\n' + $('#log').html());
+        }
+
+        var web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:8545'))
+        var eth = web3.eth
+
+        var RegistrarContractAbi = [{"constant":false,"inputs":[{"name":"id","type":"bytes32"},{"name":"id_address","type":"address"}],"name":"updateIdAddressToRegistries","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"id","type":"bytes32"},{"name":"name","type":"bytes32"}],"name":"updateNameToRegistries","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"checkAddress","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"seq","type":"uint256"}],"name":"checkTxnLogBySeq","outputs":[{"name":"","type":"uint256"},{"name":"","type":"bytes32"},{"name":"","type":"bytes32"},{"name":"","type":"address"},{"name":"","type":"address"},{"name":"","type":"bytes32"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"checkMsgSender","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"checkRegistriesSize","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"id","type":"bytes32"}],"name":"removeFromRegistries","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"id","type":"bytes32"},{"name":"sc_address","type":"address"}],"name":"updateSCAddressToRegistries","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"id","type":"bytes32"},{"name":"name","type":"bytes32"},{"name":"id_address","type":"address"},{"name":"sc_address","type":"address"}],"name":"addToRegistries","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"id","type":"bytes32"}],"name":"checkRegistries","outputs":[{"name":"","type":"bytes32"},{"name":"","type":"address"},{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"checkTxnLogSize","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"id","type":"bytes32"},{"name":"name","type":"bytes32"},{"name":"id_address","type":"address"},{"name":"sc_address","type":"address"}],"name":"updateAllToRegistries","outputs":[],"payable":false,"type":"function"},{"inputs":[{"name":"register_account","type":"address"}],"payable":false,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"id","type":"bytes32"},{"indexed":false,"name":"name","type":"bytes32"},{"indexed":false,"name":"id_address","type":"address"},{"indexed":false,"name":"sc_adress","type":"address"}],"name":"EventForAddToRegistries","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"id","type":"bytes32"}],"name":"EventForRemoveFromRegistries","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"id","type":"bytes32"},{"indexed":false,"name":"name","type":"bytes32"},{"indexed":false,"name":"id_address","type":"address"},{"indexed":false,"name":"sc_adress","type":"address"}],"name":"EventForUpdateToRegistries","type":"event"}];
+
+        var RegistrarContract = web3.eth.contract(RegistrarContractAbi);
+        var RegistrarContractAddress = '0x3f209f82d62441863a1b247490d3aba77f10c7eb';
+        var Registrar = RegistrarContract.at(RegistrarContractAddress);
+
+        alert('Finish getting Registrar Instance');
+
+        var SummaryContractAbi = [{"constant":true,"inputs":[{"name":"hospital_requester","type":"bytes32"},{"name":"hospital_provider","type":"bytes32"}],"name":"checkItemSize","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"checkAddress","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"seq","type":"uint256"}],"name":"checkTxnLogBySeq","outputs":[{"name":"","type":"uint256"},{"name":"","type":"bytes32[]"},{"name":"","type":"bytes32[]"},{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"checkMsgSender","outputs":[{"name":"","type":"address"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"addModifier","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"checkHospitalSize","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"hospital_requester","type":"bytes32"},{"name":"hospital_provider","type":"bytes32"},{"name":"item_id","type":"bytes32"}],"name":"getItem","outputs":[{"name":"","type":"bytes32"},{"name":"","type":"bytes32[]"},{"name":"","type":"uint256"},{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"hospital_requester","type":"bytes32"},{"name":"hospital_provider","type":"bytes32"},{"name":"item_id","type":"bytes32"}],"name":"removeItemFromSummaries","outputs":[],"payable":false,"type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"canModify","outputs":[{"name":"","type":"bool"}],"payable":false,"type":"function"},{"constant":true,"inputs":[],"name":"modifierCount","outputs":[{"name":"","type":"uint256"}],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"addr","type":"address"}],"name":"removeModifier","outputs":[],"payable":false,"type":"function"},{"constant":false,"inputs":[{"name":"hospital_requester","type":"bytes32"},{"name":"hospital_provider","type":"bytes32"},{"name":"item_id","type":"bytes32"},{"name":"item_name","type":"bytes32"},{"name":"purposes","type":"bytes32[]"},{"name":"provider_exp_time","type":"uint256"},{"name":"item_exp_time","type":"uint256"}],"name":"updateItemToSummaries","outputs":[],"payable":false,"type":"function"},{"inputs":[{"name":"owner_address","type":"address"}],"payable":false,"type":"constructor"},{"anonymous":false,"inputs":[{"indexed":false,"name":"time","type":"uint256"},{"indexed":false,"name":"owner_id_address","type":"address"},{"indexed":false,"name":"hospital_requester","type":"bytes32"},{"indexed":false,"name":"hospital_provider","type":"bytes32"},{"indexed":false,"name":"item_id","type":"bytes32"},{"indexed":false,"name":"item_name","type":"bytes32"},{"indexed":false,"name":"purposes","type":"bytes32[]"},{"indexed":false,"name":"provider_exp_time","type":"uint256"},{"indexed":false,"name":"item_exp_time","type":"uint256"}],"name":"EventForUpdateToSummaries","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"time","type":"uint256"},{"indexed":false,"name":"owner_id_address","type":"address"},{"indexed":false,"name":"hospital_requester","type":"bytes32"},{"indexed":false,"name":"hospital_provider","type":"bytes32"},{"indexed":false,"name":"item_id","type":"bytes32"}],"name":"EventForRemoveFromSummaries","type":"event"}];
+
+        var SummaryContract = web3.eth.contract(SummaryContractAbi);
+        var Summary;
+		var input_id; 
+
+        //alert('Finish getting Summary Instance');
+
+		//$('#user_name').val(f_name);
+
+        contractControl(Registrar, SummaryContract, Summary, input_id, eth)
+
+        function contractControl(Registrar, SummaryContract, eth) {
+
+			$('#getSContract').on('click', function() {
+				
+				input_id = $('#data1_id').val();
+				// alert(input_id)
+				
+		        var fields = Registrar.checkRegistries(input_id)
+		        var f_name = fields[0]
+		        var f_id_address = fields[1]
+		        var f_sc_address = fields[2]
+
+				if(f_id_address == "0x0000000000000000000000000000000000000000" || f_sc_address == "0x0000000000000000000000000000000000000000") {
+		            alert("輸入未註冊證號")
+				}else {
+			    	alert("個人區塊鏈位址"+f_id_address+"授權合約位址："+f_sc_address)
+				}
+
+				Summary = SummaryContract.at(f_sc_address)
+				
+				alert("Finish getting Summary Contract "+Summary)
+				
+			})
+			
+            $('#getTransactionReceipt').on('click', function() {
+
+                var dataA = eth.getTransactionReceipt($('#data5_txnHash').val())
+                //$('#log').text($('#log').text() + JSON.stringify(dataA, null, 2) + '\n')
+				log(dataA)
+
+            })
+			
+            $('#get_item1').on('click', function() {
+				var h_id = $('#hospital_id').val()
+				var o_id = $('#other_hospital_id').val()
+				var i_id = $('#item_id').val()
+				getItem(Summary, h_id , o_id, i_id);
+            })
+
+			
+		}
+
+		function getItem(Summary,hospital_id,other_hospital_id,_item_id) {
+
+			removeDemoPic();
+
+			if(Summary == undefined) {
+				alert("須先取得病人授權設定")
+				return
+			}
+
+			var fields = Summary.getItem(hospital_id, other_hospital_id, _item_id)
+			var _itemname = fields[0]
+			var _purposes = fields[1]
+			var p_exp_ts = fields[2]
+			var i_exp_ts = fields[3]
+
+			var s_purposes = $('#purposes').val();
+			
+			var _cur_ts = Math.round(+ new Date()/1000);
+			
+			//alert(_exp_ts+" "+_cur_ts)
+			//alert("ITEM NAME "+_itemname);
+			
+			var is_expired = false;
+
+			if(p_exp_ts != 0) {
+				var	p_expire_time = new Date(p_exp_ts*1000);
+				// alert(expire_time)
+				if(_cur_ts >= p_exp_ts) {
+					removeDemoPic()
+					is_expired = true;
+					alert("病歷授權已過期")
+					return
+				}
+			}
+			
+			if(i_exp_ts != 0) {
+				var	i_expire_time = new Date(i_exp_ts*1000);
+				// alert(expire_time)
+				if(_cur_ts >= i_exp_ts) {
+					removeDemoPic()
+					is_expired = true;
+					alert("病歷授權已過期")
+					return
+				}
+			}
+			
+			if (_itemname.charAt(2) == '0' && _itemname.charAt(3) == '0' && _itemname.charAt(4) == '0' ) {
+				removeDemoPic()
+				alert("病人沒有授權")
+			}
+			else {
+				//alert("ELSE")
+
+				var is_success = false;
+				var s = $('#purposes').val()
+				var l = s.length
+				
+				for(j=0;j<l;j++) {
+					var p = s[j].charAt(1)
+					for(x=1;x<=5;x++) {
+						var idx = x-1;
+						var b_p = _purposes[idx];
+						// alert(b_p)
+						if (b_p.charAt(2) == '5' && b_p.charAt(3) == '0' &&
+							b_p.charAt(4) == '3' && b_p.charAt(5) == p
+					       ) 
+						{
+							alert("病人已授權，開始調閱病歷")
+							is_success = true;
+							displayDemoPic()
+							break
+						}
+					}
+					if(is_success) {
+						break
+					}
+				}
+				if(!is_success) {
+					removeDemoPic()
+					alert("目的不符合，無法調閱病歷")
+				}
+
+			}
+				
+		}
+		
+		function displayDemoPic() {
+			$("#demo_pic").attr("src","sample1.jpg");
+		}
+		
+		function removeDemoPic() {
+			$("#demo_pic").attr("src","blank.jpg");
+		}
+    </script>
+</body>
+
+</html>

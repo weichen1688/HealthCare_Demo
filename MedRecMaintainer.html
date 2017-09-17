@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>MedRecMaintainer</title>
+    <style>
+        pre {
+            background: #E0F2F7;
+        }
+
+        .h2_fancytable {
+            border: 1px solid #cccccc;
+            border-collapse: collapse;
+        }
+
+        .h2_fancytable td {
+            border: 1px solid #cccccc;
+            color: #555555;
+            text-align: center;
+            line-height: 28px;
+        }
+
+        .h2_headerrow {
+            background-color: #0066cc;
+        }
+
+        .h2_headerrow td {
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .h2_dataroweven {
+            background-color: #efefef;
+        }
+
+        .h2_dataroweven td {
+            background-color: #acacaf;
+        }
+
+        .h3_fancytable {
+            border: 1px solid #cccccc;
+            border-collapse: collapse;
+        }
+
+        .h3_fancytable td {
+            border: 1px solid #cccccc;
+            color: #555555;
+            text-align: center;
+            line-height: 28px;
+        }
+
+        .h3_headerrow {
+            background-color: #d581c8;
+        }
+
+        .h3_headerrow td {
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .h3_dataroweven {
+            background-color: #efefef;
+        }
+
+        .h3_dataroweven td {
+            background-color: #acacaf;
+        }
+
+        .h4_fancytable {
+            border: 1px solid #cccccc;
+            border-collapse: collapse;
+        }
+
+        .h4_fancytable td {
+            border: 1px solid #cccccc;
+            color: #555555;
+            text-align: center;
+            line-height: 28px;
+        }
+
+        .h4_headerrow {
+            background-color: #8ED491;
+        }
+
+        .h4_headerrow td {
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .h4_dataroweven {
+            background-color: #efefef;
+        }
+
+        .h4_dataroweven td {
+            background-color: #acacaf;
+        }
+
+        .h5_fancytable {
+            border: 1px solid #cccccc;
+            border-collapse: collapse;
+        }
+
+        .h5_fancytable td {
+            border: 1px solid #cccccc;
+            color: #555555;
+            text-align: center;
+            line-height: 28px;
+        }
+
+        .h5_headerrow {
+            background-color: #7d1ad4;
+        }
+
+        .h5_headerrow td {
+            color: #ffffff;
+            text-align: center;
+        }
+
+        .h5_dataroweven {
+            background-color: #efefef;
+        }
+
+        .h5_dataroweven td {
+            background-color: #acacaf;
+        }
+
+    </style>
+</head>
+
+<body translate="no">
+
+<h4>授權醫院(一)調閱病人他院病歷</h4>
+<table style="height: 9px;" width="536">
+    <tbody>
+    <tr>
+        <td>
+            <font size="3">醫院代碼：</font><input style="font-size:13px" type="text" name="hospital_id" id="hospital_id"
+                                              value="H1" readonly>
+        </td>
+        <td>
+            <font size="3">病人證號：</font><input style="font-size:13px" type="text" name="display_id" id="display_id"
+                                              value="" readonly>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div id="tabs">
+    <ul>
+        <li><a href="#tabs-2"><font size="2">醫院(二)</font></a></li>
+        <li><a href="#tabs-3"><font size="2">醫院(三)</font></a></li>
+        <li><a href="#tabs-4"><font size="2">醫院(四)</font></a></li>
+        <li><a href="#tabs-5"><font size="2">醫院(五)</font></a></li>
+        <li><a href="#tabs-a"><font size="2">執行結果</font></a></li>
+    </ul>
+
+    <div id="tabs-2">
+
+        <font size="2">醫院(二)病歷授權終止日：</font><input type="text" id="h2_datepicker" size="10">
+        <table class="h2_fancytable" width="738">
+            <tbody>
+            <tr class="h2_headerrow">
+                <td style="text-align: center;" rowspan="2"><font size="2">授權調閱項目</font></td>
+                <td style="text-align: center;" colspan="5"><font size="2">授權調閱目的</font></td>
+                <td style="text-align: center;" rowspan="2" width="50"><font size="2">項目授權終止日</font></td>
+                <td style="text-align: center;" rowspan="2" width="75"></td>
+            </tr>
+            <tr class="h2_dataroweven">
+                <td style="text-align: center;"><font size="2"><strong>醫療</strong></font></td>
+                <td style="text-align: center;"><font size="2"><strong>照護</strong></font></td>
+                <td style="text-align: center;"><font size="2"><strong>教學</strong></font></td>
+                <td style="text-align: center;"><font size="2"><strong>研究</strong></font></td>
+                <td style="text-align: center;"><font size="2"><strong>商用</strong></font></td>
+            </tr>
+            <tr>
+                <td class="h2_dataroweven" style="text-align: center;"><font size="2"><strong>影像報告</strong></font></td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item1_p1" name="h2_item1_p1" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item1_p2" name="h2_item1_p2" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item1_p3" name="h2_item1_p3" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item1_p4" name="h2_item1_p4" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item1_p5" name="h2_item1_p5" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="text" id="h2_datepicker1" size="10"></td>
+                <td style="text-align: center;">
+                    <button id="h2_delete_item1"><font size="2">停止授權</font></button>
+                </td>
+            </tr>
+            <tr>
+                <td class="h2_dataroweven" style="text-align: center;"><font size="2"><strong>門診用藥</strong></font></td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item2_p1" name="h2_item2_p1" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item2_p2" name="h2_item2_p2" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item2_p3" name="h2_item2_p3" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item2_p4" name="h2_item2_p4" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item2_p5" name="h2_item2_p5" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="text" id="h2_datepicker2" size="10"></td>
+                <td style="text-align: center;">
+                    <button id="h2_delete_item2"><font size="2">停止授權</font></button>
+                </td>
+            </tr>
+            <tr>
+                <td class="h2_dataroweven" style="text-align: center;"><font size="2"><strong>血液檢驗</strong></font></td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item3_p1" name="h2_item3_p1" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item3_p2" name="h2_item3_p2" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item3_p3" name="h2_item3_p3" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item3_p4" name="h2_item3_p4" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item3_p5" name="h2_item3_p5" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="text" id="h2_datepicker3" size="10"></td>
+                <td style="text-align: center;">
+                    <button id="h2_delete_item3"><font size="2">停止授權</font></button>
+                </td>
+            </tr>
+            <tr>
+                <td class="h2_dataroweven" style="text-align: center;"><font size="2"><strong>出院病摘</strong></font></td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item4_p1" name="h2_item4_p1" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item4_p2" name="h2_item4_p2" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item4_p3" name="h2_item4_p3" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item4_p4" name="h2_item4_p4" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item4_p5" name="h2_item4_p5" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="text" id="h2_datepicker4" size="10"></td>
+                <td style="text-align: center;">
+                    <button id="h2_delete_item4"><font size="2">停止授權</font></button>
+                </td>
+            </tr>
+            <tr>
+                <td class="h2_dataroweven" style="text-align: center;"><font size="2"><strong>手術記錄</strong></font></td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item5_p1" name="h2_item5_p1" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item5_p2" name="h2_item5_p2" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item5_p3" name="h2_item5_p3" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item5_p4" name="h2_item5_p4" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h2_item5_p5" name="h2_item5_p5" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="text" id="h2_datepicker5" size="10"></td>
+                <td style="text-align: center;">
+                    <button id="h2_delete_item5"><font size="2">停止授權</font></button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table style="height: 9px;" width="536">
+            <tbody>
+            <tr>
+                <td>
+                    <button id="h2_getItem"><font size="2">查詢授權</font></button>
+                </td>
+                <td>
+                    <button id="h2_updateItemToSummaries"><font size="2">更新授權</font></button>
+                </td>
+                <td>
+                    <button id="h2_resetInput"><font size="2">清除畫面</font></button>
+                </td>
+                <!--<td><button id="checkTxnLogBySeq">查詢交易記錄</button></td>
+                <td><input id="data4_seq" type="text" placeholder="輸入流水號"/></td> -->
+            </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+    <div id="tabs-3">
+
+        <font size="2">醫院(三)病歷授權終止日：</font><input type="text" id="h3_datepicker" size="10">
+        <table class="h3_fancytable" width="738">
+            <tbody>
+            <tr class="h3_headerrow">
+                <td style="text-align: center;" rowspan="2"><font size="2">授權調閱項目</font></td>
+                <td style="text-align: center;" colspan="5"><font size="2">授權調閱目的</font></td>
+                <td style="text-align: center;" rowspan="2" width="50"><font size="2">項目授權終止日</font></td>
+                <td style="text-align: center;" rowspan="2" width="75"></td>
+            </tr>
+            <tr class="h3_dataroweven">
+                <td style="text-align: center;"><font size="2"><strong>醫療</strong></font></td>
+                <td style="text-align: center;"><font size="2"><strong>照護</strong></font></td>
+                <td style="text-align: center;"><font size="2"><strong>教學</strong></font></td>
+                <td style="text-align: center;"><font size="2"><strong>研究</strong></font></td>
+                <td style="text-align: center;"><font size="2"><strong>商用</strong></font></td>
+            </tr>
+            <tr>
+                <td class="h3_dataroweven" style="text-align: center;"><font size="2"><strong>影像報告</strong></font></td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item1_p1" name="h3_item1_p1" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item1_p2" name="h3_item1_p2" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item1_p3" name="h3_item1_p3" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item1_p4" name="h3_item1_p4" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item1_p5" name="h3_item1_p5" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="text" id="h3_datepicker1" size="10"></td>
+                <td style="text-align: center;">
+                    <button id="h3_delete_item1"><font size="2">停止授權</font></button>
+                </td>
+            </tr>
+            <tr>
+                <td class="h3_dataroweven" style="text-align: center;"><font size="2"><strong>門診用藥</strong></font></td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item2_p1" name="h3_item2_p1" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item2_p2" name="h3_item2_p2" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item2_p3" name="h3_item2_p3" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item2_p4" name="h3_item2_p4" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item2_p5" name="h3_item2_p5" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="text" id="h3_datepicker2" size="10"></td>
+                <td style="text-align: center;">
+                    <button id="h3_delete_item2"><font size="2">停止授權</font></button>
+                </td>
+            </tr>
+            <tr>
+                <td class="h3_dataroweven" style="text-align: center;"><font size="2"><strong>血液檢驗</strong></font></td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item3_p1" name="h3_item3_p1" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item3_p2" name="h3_item3_p2" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item3_p3" name="h3_item3_p3" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item3_p4" name="h3_item3_p4" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item3_p5" name="h3_item3_p5" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="text" id="h3_datepicker3" size="10"></td>
+                <td style="text-align: center;">
+                    <button id="h3_delete_item3"><font size="2">停止授權</font></button>
+                </td>
+            </tr>
+            <tr>
+                <td class="h3_dataroweven" style="text-align: center;"><font size="2"><strong>出院病摘</strong></font></td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item4_p1" name="h3_item4_p1" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item4_p2" name="h3_item4_p2" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item4_p3" name="h3_item4_p3" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item4_p4" name="h3_item4_p4" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item4_p5" name="h3_item4_p5" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="text" id="h3_datepicker4" size="10"></td>
+                <td style="text-align: center;">
+                    <button id="h3_delete_item4"><font size="2">停止授權</font></button>
+                </td>
+            </tr>
+            <tr>
+                <td class="h3_dataroweven" style="text-align: center;"><font size="2"><strong>手術記錄</strong></font></td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item5_p1" name="h3_item5_p1" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item5_p2" name="h3_item5_p2" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item5_p3" name="h3_item5_p3" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item5_p4" name="h3_item5_p4" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h3_item5_p5" name="h3_item5_p5" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="text" id="h3_datepicker5" size="10"></td>
+                <td style="text-align: center;">
+                    <button id="h3_delete_item5"><font size="2">停止授權</font></button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table style="height: 9px;" width="536">
+            <tbody>
+            <tr>
+                <td>
+                    <button id="h3_getItem"><font size="2">查詢授權</font></button>
+                </td>
+                <td>
+                    <button id="h3_updateItemToSummaries"><font size="2">更新授權</font></button>
+                </td>
+                <td>
+                    <button id="h3_resetInput"><font size="2">清除畫面</font></button>
+                </td>
+                <!--<td><button id="checkTxnLogBySeq">查詢交易記錄</button></td>
+                <td><input id="data4_seq" type="text" placeholder="輸入流水號"/></td> -->
+            </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+    <div id="tabs-4">
+
+        <font size="2">醫院(四)病歷授權終止日：</font><input type="text" id="h4_datepicker" size="10">
+        <table class="h4_fancytable" width="738">
+            <tbody>
+            <tr class="h4_headerrow">
+                <td style="text-align: center;" rowspan="2"><font size="2">授權調閱項目</font></td>
+                <td style="text-align: center;" colspan="5"><font size="2">授權調閱目的</font></td>
+                <td style="text-align: center;" rowspan="2" width="50"><font size="2">項目授權終止日</font></td>
+                <td style="text-align: center;" rowspan="2" width="75"></td>
+            </tr>
+            <tr class="h4_dataroweven">
+                <td style="text-align: center;"><font size="2"><strong>醫療</strong></font></td>
+                <td style="text-align: center;"><font size="2"><strong>照護</strong></font></td>
+                <td style="text-align: center;"><font size="2"><strong>教學</strong></font></td>
+                <td style="text-align: center;"><font size="2"><strong>研究</strong></font></td>
+                <td style="text-align: center;"><font size="2"><strong>商用</strong></font></td>
+            </tr>
+            <tr>
+                <td class="h4_dataroweven" style="text-align: center;"><font size="2"><strong>影像報告</strong></font></td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item1_p1" name="h4_item1_p1" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item1_p2" name="h4_item1_p2" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item1_p3" name="h4_item1_p3" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item1_p4" name="h4_item1_p4" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item1_p5" name="h4_item1_p5" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="text" id="h4_datepicker1" size="10"></td>
+                <td style="text-align: center;">
+                    <button id="h4_delete_item1"><font size="2">停止授權</font></button>
+                </td>
+            </tr>
+            <tr>
+                <td class="h4_dataroweven" style="text-align: center;"><font size="2"><strong>門診用藥</strong></font></td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item2_p1" name="h4_item2_p1" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item2_p2" name="h4_item2_p2" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item2_p3" name="h4_item2_p3" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item2_p4" name="h4_item2_p4" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item2_p5" name="h4_item2_p5" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="text" id="h4_datepicker2" size="10"></td>
+                <td style="text-align: center;">
+                    <button id="h4_delete_item2"><font size="2">停止授權</font></button>
+                </td>
+            </tr>
+            <tr>
+                <td class="h4_dataroweven" style="text-align: center;"><font size="2"><strong>血液檢驗</strong></font></td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item3_p1" name="h4_item3_p1" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item3_p2" name="h4_item3_p2" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item3_p3" name="h4_item3_p3" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item3_p4" name="h4_item3_p4" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item3_p5" name="h4_item3_p5" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="text" id="h4_datepicker3" size="10"></td>
+                <td style="text-align: center;">
+                    <button id="h4_delete_item3"><font size="2">停止授權</font></button>
+                </td>
+            </tr>
+            <tr>
+                <td class="h4_dataroweven" style="text-align: center;"><font size="2"><strong>出院病摘</strong></font></td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item4_p1" name="h4_item4_p1" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item4_p2" name="h4_item4_p2" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item4_p3" name="h4_item4_p3" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item4_p4" name="h4_item4_p4" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item4_p5" name="h4_item4_p5" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="text" id="h4_datepicker4" size="10"></td>
+                <td style="text-align: center;">
+                    <button id="h4_delete_item4"><font size="2">停止授權</font></button>
+                </td>
+            </tr>
+            <tr>
+                <td class="h4_dataroweven" style="text-align: center;"><font size="2"><strong>手術記錄</strong></font></td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item5_p1" name="h4_item5_p1" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item5_p2" name="h4_item5_p2" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item5_p3" name="h4_item5_p3" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item5_p4" name="h4_item5_p4" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h4_item5_p5" name="h4_item5_p5" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="text" id="h4_datepicker5" size="10"></td>
+                <td style="text-align: center;">
+                    <button id="h4_delete_item5"><font size="2">停止授權</font></button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table style="height: 9px;" width="536">
+            <tbody>
+            <tr>
+                <td>
+                    <button id="h4_getItem"><font size="2">查詢授權</font></button>
+                </td>
+                <td>
+                    <button id="h4_updateItemToSummaries"><font size="2">更新授權</font></button>
+                </td>
+                <td>
+                    <button id="h4_resetInput"><font size="2">清除畫面</font></button>
+                </td>
+                <!--<td><button id="checkTxnLogBySeq">查詢交易記錄</button></td>
+                <td><input id="data4_seq" type="text" placeholder="輸入流水號"/></td> -->
+            </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+
+
+    <div id="tabs-5">
+
+        <font size="2">醫院(五) 病歷授權終止日：</font>
+        <input type="text" id="h5_datepicker" size="10">
+
+        <table width="738" style="border:3px #FFAC55 dashed;padding:3px;" rules="all" cellpadding='3';>
+            <tbody>
+            <tr><td>
+                <div>
+                    <font size="2">輸入區塊鏈密碼：</font>
+                    <input type="password" id="inp_pass" size="10">
+                    <font size="2">選取密碼檔</font>
+                    <input id="h5_openKeyFile" type='file' accept='text/plain' style="font-size:8px">
+                    <button id="h5_updateItemToSummariesOffline"><font size="2">製作離線交易</font></button>
+                    <button id="h5_sendRawTxn"><font size="2">傳送離線交易</font></button>
+                </div>
+                <div>
+                    <font size="2">區塊鏈公鑰：</font>
+                    <input type="text" style="font-size:8px" id="showpubkey" size="50" readonly>
+                    <font size="2">區塊鏈私鑰：</font>
+                    <input type="text" style="font-size:8px" id="showprivkey" size="70" readonly>
+                </div>
+            </td></tr>
+            </tbody>
+        </table>
+        <table class="h5_fancytable" width="738">
+            <tbody>
+            <tr class="h5_headerrow">
+                <td style="text-align: center;" rowspan="2"><font size="2">授權調閱項目</font></td>
+                <td style="text-align: center;" colspan="5"><font size="2">授權調閱目的</font></td>
+                <td style="text-align: center;" rowspan="2" width="50"><font size="2">項目授權終止日</font></td>
+                <td style="text-align: center;" rowspan="2" width="75"><font size="2">離線交易內容</font></td>
+            </tr>
+            <tr class="h5_dataroweven">
+                <td style="text-align: center;"><font size="2"><strong>醫療</strong></font></td>
+                <td style="text-align: center;"><font size="2"><strong>照護</strong></font></td>
+                <td style="text-align: center;"><font size="2"><strong>教學</strong></font></td>
+                <td style="text-align: center;"><font size="2"><strong>研究</strong></font></td>
+                <td style="text-align: center;"><font size="2"><strong>商用</strong></font></td>
+            </tr>
+            <tr>
+                <td class="h5_dataroweven" style="text-align: center;"><font size="2"><strong>影像報告</strong></font></td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item1_p1" name="h5_item1_p1" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item1_p2" name="h5_item1_p2" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item1_p3" name="h5_item1_p3" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item1_p4" name="h5_item1_p4" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item1_p5" name="h5_item1_p5" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="text" id="h5_datepicker1" size="10"></td>
+                <td style="text-align: center;">
+                    <textarea id="h5_txn_signed_1" rows="1" readonly style="font-size:8px"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td class="h5_dataroweven" style="text-align: center;"><font size="2"><strong>門診用藥</strong></font></td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item2_p1" name="h5_item2_p1" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item2_p2" name="h5_item2_p2" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item2_p3" name="h5_item2_p3" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item2_p4" name="h5_item2_p4" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item2_p5" name="h5_item2_p5" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="text" id="h5_datepicker2" size="10"></td>
+                <td style="text-align: center;">
+                    <textarea id="h5_txn_signed_2" rows="1" readonly style="font-size:8px"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td class="h5_dataroweven" style="text-align: center;"><font size="2"><strong>血液檢驗</strong></font></td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item3_p1" name="h5_item3_p1" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item3_p2" name="h5_item3_p2" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item3_p3" name="h5_item3_p3" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item3_p4" name="h5_item3_p4" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item3_p5" name="h5_item3_p5" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="text" id="h5_datepicker3" size="10"></td>
+                <td style="text-align: center;">
+                    <textarea id="h5_txn_signed_3" rows="1" readonly style="font-size:8px"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td class="h5_dataroweven" style="text-align: center;"><font size="2"><strong>出院病摘</strong></font></td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item4_p1" name="h5_item4_p1" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item4_p2" name="h5_item4_p2" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item4_p3" name="h5_item4_p3" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item4_p4" name="h5_item4_p4" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item4_p5" name="h5_item4_p5" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="text" id="h5_datepicker4" size="10"></td>
+                <td style="text-align: center;">
+                    <textarea id="h5_txn_signed_4" rows="1" readonly style="font-size:8px"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td class="h5_dataroweven" style="text-align: center;"><font size="2"><strong>手術記錄</strong></font></td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item5_p1" name="h5_item5_p1" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item5_p2" name="h5_item5_p2" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item5_p3" name="h5_item5_p3" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item5_p4" name="h5_item5_p4" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="checkbox" id="h5_item5_p5" name="h5_item5_p5" value="Y">
+                </td>
+                <td style="text-align: center;"><input type="text" id="h5_datepicker5" size="10"></td>
+                <td style="text-align: center;">
+                    <textarea id="h5_txn_signed_5" rows="1" readonly style="font-size:8px"></textarea>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table style="height: 9px;" width="536">
+            <tbody>
+            <tr>
+                <td>
+                    <button id="h5_getItem"><font size="2">查詢授權</font></button>
+                </td>
+                <td>
+                    <button id="h5_updateItemToSummaries"><font size="2">更新授權</font></button>
+                </td>
+                <td>
+                    <button id="h5_resetInput"><font size="2">清除畫面</font></button>
+                </td>
+                <!--<td><button id="checkTxnLogBySeq">查詢交易記錄</button></td>
+                <td><input id="data4_seq" type="text" placeholder="輸入流水號"/></td> -->
+            </tr>
+            </tbody>
+        </table>
+
+
+    </div>
+
+
+    <div id="tabs-a">
+        <pre id="log"></pre>
+    </div>
+</div>
+
+<link rel="stylesheet" href='jquery-ui.css'>
+<script src='jquery-1.12.4.js'></script>
+<script src='jquery-ui.js'></script>
+
+<script src='web3.min.js'></script>
+<script src='MedRecMaintainerOfflineBrowsify.js'></script>
+
+
+</body>
+
+</html>

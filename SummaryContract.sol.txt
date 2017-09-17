@@ -1,0 +1,259 @@
+    pragma solidity ^0.4.0;                                        
+                                                                   
+    contract SummaryContract {                                           
+        
+        struct item  {
+            bytes32 item_id;
+    	    bytes32 item_name;
+    	    bytes32 [] purposes;
+    	    uint expire_time;
+        }
+         
+    	struct provider {
+    	    uint256 size;
+    	    bytes32 hospital_id;
+		    bytes32 [] indices;    // use item_id as index
+		    mapping(bytes32 => item) items;
+		    mapping(bytes32 => bool) hasItem;
+		    uint expire_time;
+	    }
+
+    	struct requester {
+            uint256 size;
+    	    bytes32 hospital_id;
+            bytes32 [] indices;   // use provider as index
+            mapping(bytes32 => provider) providers;
+            mapping(bytes32 => bool) hasProvider;
+	    }
+
+        struct summary {
+            uint256 size;
+            bytes32 [] indices;
+            mapping(bytes32 => requester) requesters;
+            mapping(bytes32 => bool) hasRequester;
+        }
+
+        summary private summaries;
+
+	    address private owner_id_address;
+
+        event EventForUpdateToSummaries(uint time, address owner_id_address, bytes32 hospital_requester, bytes32 hospital_provider, bytes32 item_id, bytes32 item_name, bytes32 [] purposes, uint provider_exp_time, uint item_exp_time);                    
+        event EventForRemoveFromSummaries(uint time, address owner_id_address, bytes32 hospital_requester, bytes32 hospital_provider, bytes32 item_id);                    
+
+        struct log_entry  {
+            uint time;
+            address owner_id_address;
+            bytes32 hospital_requester;
+            bytes32 hospital_provider;
+            bytes32 item_id;
+    	    bytes32 item_name;
+    	    bytes32 [] purposes;
+    	    uint provider_exp_time;
+    	    uint item_exp_time;
+            bytes32 note;   
+        }
+         
+    	struct log {
+		    uint256 size;    
+		    mapping(uint256 => log_entry) log_entries;  // use seqnum as index
+	    }
+
+	    log private transactionLog;
+
+        uint public modifierCount;
+        mapping(address => bool) public canModify;
+
+        function SummaryContract(address owner_address)
+        {   
+            owner_id_address=owner_address;
+            canModify[owner_address] = true;
+		    modifierCount++;
+            // is_contract_opened = true;
+        }                                                          
+
+	    modifier mustCanModify() {
+	        if (canModify[msg.sender]) {
+		        _;
+		    } else {
+		        throw;
+		    }
+	    }
+	    
+	    modifier mustBeOwner() {
+	        if (msg.sender == owner_id_address) {
+		        _;
+		    } else {
+		        throw;
+		    }
+	    }
+	    
+	    function addModifier(address addr) mustBeOwner {
+		    if (!canModify[addr]) {
+		        canModify[addr] = true;
+		        modifierCount++;
+		    }
+	    }
+
+	    function removeModifier(address addr) mustBeOwner {
+	        if (modifierCount == 1) throw;
+
+            if (canModify[addr]) {
+	            delete canModify[addr];
+	            modifierCount--;
+            }	    
+	    }
+
+        function updateItemToSummaries(bytes32 hospital_requester, bytes32 hospital_provider,
+                bytes32 item_id, bytes32 item_name, bytes32 [] purposes, uint provider_exp_time,
+                uint item_exp_time) mustCanModify {                            
+
+            if(!summaries.hasRequester[hospital_requester]) {
+                summaries.indices.push(hospital_requester);
+                summaries.hasRequester[hospital_requester]=true;
+                summaries.requesters[hospital_requester].hospital_id=hospital_requester; 
+                summaries.requesters[hospital_requester].indices.push(hospital_provider);
+                summaries.requesters[hospital_requester].hasProvider[hospital_provider]=true;
+                summaries.requesters[hospital_requester].size+=1;
+                summaries.requesters[hospital_requester].providers[hospital_provider].hospital_id=hospital_provider;
+                summaries.requesters[hospital_requester].providers[hospital_provider].expire_time = provider_exp_time;
+                summaries.requesters[hospital_requester].providers[hospital_provider].size+=1;
+                summaries.requesters[hospital_requester].providers[hospital_provider].indices.push(item_id);
+                summaries.requesters[hospital_requester].providers[hospital_provider].hasItem[item_id]=true;
+                summaries.requesters[hospital_requester].providers[hospital_provider].items[item_id]=item(item_id, item_name, purposes , item_exp_time);
+                summaries.size += 1;
+            }
+            else if(!summaries.requesters[hospital_requester].hasProvider[hospital_provider]) {
+                summaries.requesters[hospital_requester].indices.push(hospital_provider);
+                summaries.requesters[hospital_requester].hasProvider[hospital_provider]=true;
+                summaries.requesters[hospital_requester].providers[hospital_provider].size+=1;
+                summaries.requesters[hospital_requester].providers[hospital_provider].hospital_id=hospital_provider;
+                summaries.requesters[hospital_requester].providers[hospital_provider].expire_time = provider_exp_time;
+                summaries.requesters[hospital_requester].providers[hospital_provider].indices.push(item_id);
+                summaries.requesters[hospital_requester].providers[hospital_provider].hasItem[item_id]=true;
+                summaries.requesters[hospital_requester].providers[hospital_provider].items[item_id]=item(item_id, item_name, purposes , item_exp_time);
+                summaries.size += 1;
+            }
+            else if(!summaries.requesters[hospital_requester].providers[hospital_provider].hasItem[item_id]) {
+                summaries.requesters[hospital_requester].providers[hospital_provider].indices.push(item_id);
+                 // also update provider_exp_time. 
+                 // Note : There is only one provider_exp_time per provider. 
+                 //        Only the lastest update counts. 
+                summaries.requesters[hospital_requester].providers[hospital_provider].expire_time = provider_exp_time; 
+                summaries.requesters[hospital_requester].providers[hospital_provider].hasItem[item_id]=true;
+                summaries.requesters[hospital_requester].providers[hospital_provider].items[item_id]=item(item_id, item_name, purposes , item_exp_time);
+                summaries.requesters[hospital_requester].providers[hospital_provider].size +=1;
+            }else {
+                // update the item if already exist
+                if(summaries.requesters[hospital_requester].providers[hospital_provider].hasItem[item_id]) {
+                     // also update provider_exp_time. 
+                     // Note : There is only one provider_exp_time per provider. 
+                     //        Only the lastest update counts. 
+                    summaries.requesters[hospital_requester].providers[hospital_provider].expire_time = provider_exp_time; 
+                    delete summaries.requesters[hospital_requester].providers[hospital_provider].items[item_id];
+                    summaries.requesters[hospital_requester].providers[hospital_provider].items[item_id]=item(item_id, item_name, purposes , item_exp_time);
+                }
+            }
+
+            uint time = now;
+            transactionLog.size=transactionLog.size+1;
+            transactionLog.log_entries[transactionLog.size]=log_entry(time,owner_id_address,hospital_requester,hospital_provider,item_id,item_name,purposes, provider_exp_time, item_exp_time, "UPDATE"); 
+
+            EventForUpdateToSummaries(time, owner_id_address,hospital_requester,hospital_provider,item_id,item_name,purposes, provider_exp_time, item_exp_time);                    
+        }                                                          
+
+        function removeItemFromSummaries(bytes32 hospital_requester, bytes32 hospital_provider, bytes32 item_id) 
+                            mustCanModify {                            
+
+            if(summaries.size == 0) {
+                throw;
+            }
+            
+    	    bytes32 item_name = summaries.requesters[hospital_requester].providers[hospital_provider].items[item_id].item_name;
+    	    bytes32 [] purposes = summaries.requesters[hospital_requester].providers[hospital_provider].items[item_id].purposes;
+    	    uint item_exp_time = summaries.requesters[hospital_requester].providers[hospital_provider].items[item_id].expire_time;
+    	    uint provider_exp_time = summaries.requesters[hospital_requester].providers[hospital_provider].expire_time;
+
+            if(summaries.requesters[hospital_requester].providers[hospital_provider].hasItem[item_id]) {
+                uint size = summaries.requesters[hospital_requester].providers[hospital_provider].indices.length;
+                for(uint i=0;i<size;i++) {
+                    if(summaries.requesters[hospital_requester].providers[hospital_provider].indices[i] == item_id) {
+                        summaries.requesters[hospital_requester].providers[hospital_provider].indices[i] = summaries.requesters[hospital_requester].providers[hospital_provider].indices[size-1];
+                        break;
+                    }
+                }                
+                delete summaries.requesters[hospital_requester].providers[hospital_provider].indices[summaries.requesters[hospital_requester].providers[hospital_provider].size-1];
+                summaries.requesters[hospital_requester].providers[hospital_provider].indices.length--;
+
+                delete summaries.requesters[hospital_requester].providers[hospital_provider].items[item_id];
+                summaries.requesters[hospital_requester].providers[hospital_provider].hasItem[item_id]=false;
+                summaries.requesters[hospital_requester].providers[hospital_provider].size -= 1;
+
+            }else {
+                throw;
+            }
+
+            uint time = now;
+            transactionLog.size=transactionLog.size+1;
+            transactionLog.log_entries[transactionLog.size]=log_entry( time, owner_id_address, hospital_requester, hospital_provider, item_id, item_name, purposes, provider_exp_time, item_exp_time,"REMOVE"); 
+
+            EventForRemoveFromSummaries(time, owner_id_address, hospital_requester, hospital_provider, item_id);                    
+        }                                                          
+
+        function checkHospitalSize() constant returns(uint256){
+            return summaries.size;
+        }
+
+        // if an item is expired, then don't return its purposes
+        // check provider_expire_time first, then item_expire_time.
+        function getItem(bytes32 hospital_requester, bytes32 hospital_provider, bytes32 item_id) constant returns(bytes32, bytes32 [], uint, uint) {
+            bytes32 item_name;
+            bytes32 [] memory purposes = new bytes32[](20); //dynamic array, can't resize through
+           
+            uint provider_expire_time = summaries.requesters[hospital_requester].providers[hospital_provider].expire_time;
+            uint item_expire_time = summaries.requesters[hospital_requester].providers[hospital_provider].items[item_id].expire_time;
+            uint current_time = now;
+            
+            if(current_time >= provider_expire_time && provider_expire_time != 0) {
+                return(item_name, purposes, provider_expire_time, item_expire_time);
+            }
+            else if(current_time >= item_expire_time && item_expire_time != 0) {
+                return(item_name, purposes, provider_expire_time, item_expire_time);
+            }else {
+                item_name = summaries.requesters[hospital_requester].providers[hospital_provider].items[item_id].item_name;
+                purposes = summaries.requesters[hospital_requester].providers[hospital_provider].items[item_id].purposes;
+                return(item_name, purposes, provider_expire_time, item_expire_time);
+            }
+        }
+
+        function checkItemSize(bytes32 hospital_requester, bytes32 hospital_provider) constant returns(uint256){
+            return summaries.requesters[hospital_requester].providers[hospital_provider].size;
+        }
+
+        function checkAddress() constant returns(address) {        
+            return this;                                           
+        }                                                          
+
+        function checkMsgSender() constant returns(address) {
+            return msg.sender;
+        }
+        
+        function checkTxnLogBySeq(uint256 seq) constant returns(uint,bytes32 [],bytes32 [], uint, uint){
+
+            uint time = transactionLog.log_entries[seq].time;
+
+            bytes32 [] memory info = new bytes32[](5);
+            info[0] = transactionLog.log_entries[seq].hospital_requester;
+            info[1] = transactionLog.log_entries[seq].hospital_provider;
+            info[2] = transactionLog.log_entries[seq].item_id;
+            info[3] = transactionLog.log_entries[seq].item_name;
+            info[4] = transactionLog.log_entries[seq].note;
+
+    	    bytes32 [] purposes  = transactionLog.log_entries[seq].purposes;
+      	    uint provider_exp_time = transactionLog.log_entries[seq].provider_exp_time;
+    	    uint item_exp_time = transactionLog.log_entries[seq].item_exp_time;
+
+
+            return (time, info, purposes, provider_exp_time, item_exp_time);
+        }
+
+    } 
