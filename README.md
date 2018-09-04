@@ -1,6 +1,6 @@
 # HealthCare_Demo
-Medical Record Authorization Smart Contract & DApp Demo Program ( Ethereum )
+An Ethereum DApp Demo for Medical Record Authorization.
 
-This demo program is to show how to write an offline DApp by using raw transaction.
+This demo is to show how to develop an offline (raw transaction) Ethereum DApp.
 
-The DApp is browsified so it can be run within a browser environment.
+The DApp is browsified so it can be run on browser environment.
