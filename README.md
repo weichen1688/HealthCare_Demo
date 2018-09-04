@@ -1,2 +1,2 @@
 # HealthCare_Demo
-A simple HeathCare System based on Ethereum.
+Medical Record Authorization Smart Contract & DApp Demo Program ( Ethereum )
